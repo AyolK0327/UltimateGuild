@@ -1,12 +1,24 @@
 name: "工会菜单"
-slot: 3
+slot: 6
 
 
 #排版
-item:
-  name:
-  lore:
-    - "1"
-    - "1"
-    - "1"
-  slot: {1,2,3,,4,5}
+icon:
+  1:
+    name: "&1测试"
+    type: "APPLE"
+    lore:
+      - "&c测试1"
+      - "测试2"
+      - "测试3"
+    amount: 4
+    slot: 1
+  2:
+    name: "测试1"
+    type: "APPLE"
+    lore:
+      - "测试1"
+      - "测试1"
+      - "测试1"
+    amount: 1
+    slot: 2

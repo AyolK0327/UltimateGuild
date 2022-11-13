@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -49,22 +50,32 @@ public class AdminCommand implements CommandExecutor {
     @Override
     @ParametersAreNonnullByDefault
     public boolean  onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player player = (Player) sender;
         if(args[0].toLowerCase().equals("reload")){
             sender.sendMessage("重置成功.");
+            try {
+                new Gui(plugin).LoadGuiConfig(plugin);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             this.plugin.reloadConfig();
             this.plugin.saveConfig();
             return true;
         }
-        if(args[0].toLowerCase().equals("test")){
-            sender.sendMessage(new Gui(plugin).getConfigMenu().getConfigurationSection("item").getKeys(false).toString());
+        if(!(sender instanceof Player)){
+            sender.sendMessage("必须是玩家!");
+            return true;
+        }
+        Player player = (Player) sender;
+
+        if(args[0].equalsIgnoreCase("test")){
+            sender.sendMessage(Gui.config.getString("icon.1.name"));
 
             return true;
         }
-        if(args[0].toLowerCase().equals("open")){
+        if(args[0].equalsIgnoreCase("open")){
             new Gui(plugin).test((Player) sender);
         }
-        if(args[0].toLowerCase().equals("get")){
+        if(args[0].equalsIgnoreCase("get")){
             List<Map<?, ?>> a = plugin.getConfig().getMapList("Guild.Level");
             if(Integer.parseInt(args[1]) > a.size() ){
                 sender.sendMessage("等级过高..");
