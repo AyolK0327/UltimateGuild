@@ -1,0 +1,38 @@
+##数据库
+MySQL:
+  drive: "com.mysql.jdbc.Driver"
+  host: localhost
+  port: 3306
+  database: test      #UltimateGuild
+  username: root
+  password: '1234567890'
+##工会相关
+
+Guild:
+  ##汇率 设置为 10 就是 金币 10 ：1 工会币
+  ExchangeRate: 10
+  ##创建工会消耗 ？
+  CreateCost: 0
+  ## 等级设置
+  Level:
+      ##等级
+    - 1:
+        ##升级所需经验
+        exp: 30
+        ##当前等级的工会最大人数
+        max: 6
+    - 2:
+        exp: 30
+        max: 12
+    - 3:
+        exp: 30
+        max: 18
+    - 4:
+        exp: 30
+        max: 24
+    - 5:
+        exp: 30
+        max: 30
+    - 6:
+        exp: 30
+        max: 36

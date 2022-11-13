@@ -1,0 +1,13 @@
+name: UltimateGuild
+version: 1.0.0
+main: me.ayolk.ultimateguild.UltimateGuild
+authors: [ AyolK ]
+api-version: 1.12.2
+commands:
+  UltimateGuild:
+    aliases:
+      - ug
+  UltimateGuildAdmin:
+    aliases:
+      - ugadmin
+

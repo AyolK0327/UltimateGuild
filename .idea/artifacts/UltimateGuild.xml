@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="UltimateGuild">
+    <output-path>$PROJECT_DIR$/../../server-test/plugins</output-path>
+    <root id="archive" name="UltimateGuild.jar">
+      <element id="module-output" name="UltimateGuild" />
+    </root>
+  </artifact>
+</component>
