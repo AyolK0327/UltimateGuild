@@ -1,0 +1,75 @@
+name: "工会菜单"
+slot: 6
+
+test:
+  - '#########'
+  - ''
+
+#排版
+icon:
+  #工会图标
+  1:
+    name: " "
+    type: "STAINED_GLASS_PANE"
+    lore:
+      - ""
+    amount: 1
+    slot:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 17
+      - 18
+      - 26
+      - 27
+      - 35
+      - 36
+      - 44
+      - 45
+      - 46
+      - 47
+      - 48
+      - 49
+      - 50
+      - 51
+      - 52
+      - 53
+
+
+    action:
+      - "ugadmin reload"
+      - "ugadmin test"
+      - "say %player_name%"
+  3:
+    name: "测试1"
+    type: "Guild"
+    lore:
+      - "工会人数 %Guild_Has_Player%/%Guild_Max_Player%"
+      - "工会等级 %Guild_Level%"
+      - "工会创建时间 : 2001-12-1"
+      - "工会介绍:"
+      - "%Guild_info%"
+      -
+      - "[点击申请加入工会]"
+    amount: 1
+    slot:
+      - 20
+      - 21
+      - 22
+      - 23
+      - 24
+      - 29
+      - 30
+      - 31
+      - 32
+      - 33
+    action:
+      - "[Guild]"
+

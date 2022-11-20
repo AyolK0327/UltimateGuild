@@ -7,8 +7,12 @@ MySQL:
   username: root
   password: '1234567890'
 ##工会相关
-
+##自动保存数据 60 秒
+AutoSave:
+  enable: true
+  Deny: 60
 Guild:
+  GuildIsNull: "无工会"
   ##汇率 设置为 10 就是 金币 10 ：1 工会币
   ExchangeRate: 10
   ##创建工会消耗 ？
@@ -16,23 +20,23 @@ Guild:
   ## 等级设置
   Level:
       ##等级
-    - 1:
+    1:
         ##升级所需经验
-        exp: 30
+      exp: 30
         ##当前等级的工会最大人数
-        max: 6
-    - 2:
-        exp: 30
-        max: 12
-    - 3:
-        exp: 30
-        max: 18
-    - 4:
-        exp: 30
-        max: 24
-    - 5:
-        exp: 30
-        max: 30
-    - 6:
-        exp: 30
-        max: 36
+      max: 6
+    2:
+      exp: 30
+      max: 12
+    3:
+      exp: 30
+      max: 18
+    4:
+      exp: 30
+      max: 24
+    5:
+      exp: 30
+      max: 30
+    6:
+      exp: 30
+      max: 36

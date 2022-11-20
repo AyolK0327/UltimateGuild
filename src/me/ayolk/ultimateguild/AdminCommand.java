@@ -9,11 +9,13 @@ import org.bukkit.plugin.Plugin;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static me.ayolk.ultimateguild.sql.data.*;
 
 public class AdminCommand implements CommandExecutor {
+    public static List<Player> Players = new ArrayList<>();
     public String getMax(Object[] b){
         StringBuilder test = new StringBuilder();
         int maxGet = (Arrays.toString(b).toLowerCase().indexOf("max")+4);
@@ -45,12 +47,12 @@ public class AdminCommand implements CommandExecutor {
     private final Plugin plugin;
 
     public AdminCommand(Plugin plugin) {
-        this.plugin = plugin; // 给句柄添加引用
+        this.plugin = plugin;
     }
     @Override
     @ParametersAreNonnullByDefault
     public boolean  onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args[0].toLowerCase().equals("reload")){
+        if(args[0].equalsIgnoreCase("reload")){
             sender.sendMessage("重置成功.");
             try {
                 new Gui(plugin).LoadGuiConfig(plugin);
@@ -65,30 +67,48 @@ public class AdminCommand implements CommandExecutor {
             sender.sendMessage("必须是玩家!");
             return true;
         }
-        Player player = (Player) sender;
+        if(args[0].equalsIgnoreCase("give")){
+            for(String[] a : Player_data){
+                if(a[0].equals(args[1])){
+                    int setMoney = Integer.parseInt(a[2]) + Integer.parseInt(args[2]);
+                    a[2] = String.valueOf(setMoney);
+                    sender.sendMessage("玩家" + args[1] +"工会币 +"+ args[2]);
+                    return true;
+                }
+            }
+            sender.sendMessage("玩家不在线!");
+        }
 
         if(args[0].equalsIgnoreCase("test")){
-            sender.sendMessage(Gui.config.getString("icon.1.name"));
-
-            return true;
+            //设置prob1t的钱
+            sender.sendMessage(refFormatNowDate());
+        }
+        if(args[0].equals("test2")){
+            sender.sendMessage(Arrays.toString(Guild_data.get(0)));
         }
         if(args[0].equalsIgnoreCase("open")){
-            new Gui(plugin).test((Player) sender);
+            new Gui(plugin).test((Player) sender, Integer.parseInt(args[1]));
+        }
+        if(args[0].equalsIgnoreCase("create")){
+            Players.add((Player) sender);
+            sender.sendMessage("聊天框中输入工会名字以创建工会,输入\"取消\"或者\"cancel\"来取消创建工会!");
         }
         if(args[0].equalsIgnoreCase("get")){
-            List<Map<?, ?>> a = plugin.getConfig().getMapList("Guild.Level");
-            if(Integer.parseInt(args[1]) > a.size() ){
+            Set<String> LevelKeys = plugin.getConfig().getConfigurationSection("Guild.Level").getKeys(false);
+            if(Integer.parseInt(args[1]) > LevelKeys.size() ){
                 sender.sendMessage("等级过高..");
                 return true;
             }
             //sender.sendMessage(Arrays.toString(a.get(1).values().toArray()));
-            Object[] b = a.get(Integer.parseInt(args[1])+1).values().toArray();
-            sender.sendMessage("等级:"+args[1] + "经验:"+getExp(b) + "人数:" + getMax(b));
-
         }
         return true;
     }
-
+    public String refFormatNowDate(){
+        Date nowTime = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdFormatter = new SimpleDateFormat("yyy年MM月dd日hh点mm分");
+        String retStrFormatNowDate = sdFormatter.format(nowTime);
+        return retStrFormatNowDate;
+    }
 
 
 }

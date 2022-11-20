@@ -1,6 +1,5 @@
 package me.ayolk.ultimateguild;
 
-import me.ayolk.ultimateguild.sql.data;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +21,6 @@ public class UserCommand implements CommandExecutor {
             sender.sendMessage("必须是玩家!");
             return true;
         }
-        new data().test(plugin);
         sender.sendMessage("啥事没有.");
         return false;
     }

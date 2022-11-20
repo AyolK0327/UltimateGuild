@@ -1,14 +1,19 @@
 package me.ayolk.ultimateguild.Gui;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+
+import java.util.List;
+
+import static me.ayolk.ultimateguild.Gui.Gui.MenuList;
+import static me.ayolk.ultimateguild.Gui.Gui.config;
 
 
 public class GuiListener implements Listener {
@@ -27,42 +32,48 @@ public class GuiListener implements Listener {
             Bukkit.dispatchCommand(player,command);
         }
     }
-
-
     public GuiListener(Plugin plugin) {this.plugin = plugin;}
     public YamlConfiguration configuration =Gui.config;
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         // 只有玩家可以触发 InventoryClickEvent，可以强制转换
-        InventoryView inv = player.getOpenInventory();
         ItemStack clickedItem = e.getCurrentItem();
-        if (inv.getTitle().equals(configuration.getString("name").replace("&","§"))) {
-            // 通过标题区分 GUI
-            e.setCancelled(true);
-            if(e.getRawSlot() == -999){
-                return;
-            }
-            if (e.getRawSlot()  < 0 || e.getRawSlot() < e.getInventory().getSize()) {
-                if (clickedItem == null){
-                    return;
-                }
-                // 这个方法来源于 Bukkit Development Note
-                // 如果在合理的范围内，getRawSlot 会返回一个合适的编号（0 ~ 物品栏大小-1）
-                if(e.getRawSlot() == 0) {
-                    //执行指令
-                    Bukkit.dispatchCommand(player,"ugadmin test");
-
-                }else{
-                    return;
-                }
-                player.sendRawMessage(String.valueOf(e.getRawSlot()));
-                return;
-                // 结束处理，使用 return 避免了多余的 else
-            }
-            // 获取被点的物品
-
+        if(!(e.getInventory().equals(Gui.inv1))){
+            return;
         }
-        // 后续处理
+        e.setCancelled(true);
+        if(e.getRawSlot() == -999){
+            return;
+        }
+        if (e.getRawSlot()  < 0 || e.getRawSlot() < e.getInventory().getSize()) {
+            if (clickedItem == null){
+                return;
+            }
+            Actions(e.getRawSlot(),player);
+
+            String testtttt = "1";
+            int tss = Integer.parseInt(testtttt);
+
+            player.sendRawMessage(String.valueOf(e.getRawSlot()));
+        }
+    }
+    public void Actions(int slot,Player player){
+        for (String[] Menu : MenuList){
+            List<Integer> getSlot = config.getIntegerList("icon."+Menu[3]+".slot");
+            for(int i : getSlot){
+                if(i == slot){
+                    List<String> ActionCommand = config.getStringList("icon."+Menu[3]+".action");
+                    for(String a : ActionCommand){
+                        if(a.equalsIgnoreCase("[test]")){
+                            player.sendRawMessage("获取到[test]");
+                        }else{
+                            String b = PlaceholderAPI.setPlaceholders(player,a);
+                            OpPerformCommand(player,b);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
