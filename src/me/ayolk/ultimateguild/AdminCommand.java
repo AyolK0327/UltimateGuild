@@ -25,7 +25,6 @@ public class AdminCommand implements CommandExecutor {
             }else{
                 test.append(Arrays.toString(b), maxGet + i, maxGet + i + 1);
             }
-
         }
         return test.toString();
     }
@@ -81,7 +80,7 @@ public class AdminCommand implements CommandExecutor {
 
         if(args[0].equalsIgnoreCase("test")){
             //设置prob1t的钱
-            sender.sendMessage(refFormatNowDate());
+            sender.sendMessage(String.valueOf(new Date().getTime()));
         }
         if(args[0].equals("test2")){
             sender.sendMessage(Arrays.toString(Guild_data.get(0)));

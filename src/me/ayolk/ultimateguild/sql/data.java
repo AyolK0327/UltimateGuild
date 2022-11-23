@@ -7,7 +7,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static me.ayolk.ultimateguild.sql.sql.connection;
@@ -22,6 +24,7 @@ public class data{
         data.plugin = plugin;
     }
     public static void getGuildData(){
+        Guild_data.clear();
         new BukkitRunnable(){
             @Override
             public void run() {
@@ -39,7 +42,13 @@ public class data{
                         String GuildCoin = rs.getString("GuildCoin");
                         String GuildSign = rs.getString("GuildSign");
                         String GuildInfo = rs.getString("GuildInfo");
-                        String[] getAll = {GuildName,GuildLevel,GuildExp,GuildCoin,GuildSign,GuildInfo};
+                        String GuildMax = rs.getString("GuildMax");
+                        String GuildHas = rs.getString("GuildHas");
+                        String GuildDate = rs.getString("GuildDate");
+                        String TransferLimit = rs.getString("TransferLimit");
+                        String Master = rs.getString("Master");
+                        String GuildUid = rs.getString("GuildUid");
+                        String[] getAll = {GuildName,GuildLevel,GuildExp,GuildCoin,GuildSign,GuildInfo,GuildMax,GuildHas,GuildDate,TransferLimit,Master,GuildUid};
                         Guild_data.add(getAll);
                     }
                 }catch (Exception e){
@@ -49,7 +58,6 @@ public class data{
         }.runTaskAsynchronously(plugin);
     }
     public static void saveData() {
-        new sql(plugin).run();
         for(String[] a : Player_data){
             try {
                 String save = "UPDATE guildplayer_data SET " +
@@ -57,6 +65,7 @@ public class data{
                         "GuildPosition= \""+a[3] + "\"," +
                         "GuildCoin= " +Integer.parseInt(a[2]) +
                         " WHERE PlayerName=\""+a[0]+"\"";
+                new sql(plugin).run();
                 connection.prepareStatement(save).executeUpdate();
                 connection.close();
             }catch (Exception e){
@@ -72,9 +81,34 @@ public class data{
         }
         return true;
     }
+    public static String refFormatNowDate(){
+        Date nowTime = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdFormatter = new SimpleDateFormat("yyy年MM月dd日hh点mm分");
+        String retStrFormatNowDate = sdFormatter.format(nowTime);
+        return retStrFormatNowDate;
+    }
+    public static String getLastUid(){
+        return String.valueOf(new Date().getTime());
+    }
+
     public static void createGuild(Player player, String GuildName){
         new sql(plugin).run();
         try{
+            /*
+            "GuildUid INTEGER NOT NULL PRIMARY KEY NOT NULL," +
+                "GuildName VARCHAR(255),\n" +
+                "GuildLevel INTEGER NOT NULL,\n" +
+                "GuildExp INTEGER NOT NULL, \n" +
+                "GuildCoin INTEGER NOT NULL,\n" +
+                "GuildSign VARCHAR(255),\n" +
+                "GuildInfo VARCHAR(255),\n" +
+                "GuildMax INTEGER NOT NULL," +
+                "GuildHas INTEGER NOT NULL," +
+                "GuildDate VARCHAR(255)," +
+                "TransferLimit VARCHAR(255)," +
+                "Master VARCHAR(255)"+
+                ");";
+             */
             //创建工会语句
             String insertsGuild =
                     "INSERT INTO ultimateguild_data "  +
@@ -83,14 +117,26 @@ public class data{
                             "GuildExp," +
                             "GuildCoin," +
                             "GuildInfo, " +
-                            "GuildSign) " +
-                    "VALUES(" +
+                            "GuildSign, " +
+                            "GuildMax, " +
+                            "GuildHas," +
+                            "GuildDate," +
+                            "TransferLimit," +
+                            "Master," +
+                            "GuildUid"+
+                    ")VALUES(" +
                             "\""+ GuildName +"\"," +
                             "1," +
                             "0," +
                             "0," +
                             "\"会长很懒,什么都没有写...\"," +
-                            "\"APPLE\"" +
+                            "\"APPLE\"," +
+                            "\""+plugin.getConfig().getString("Guild.Level.1.max") + "\"," +
+                            "1," +
+                            "\"" +refFormatNowDate() + "\"," +
+                            "0," +
+                            "\""+player.getName()+"\","+
+                            getLastUid() +
                             ")";
             //标记会长语句
             String setPlayer = "UPDATE guildplayer_data SET " +
@@ -116,10 +162,12 @@ public class data{
             for (String[] a : Player_data){
                 if(a[0].equals(player.getName())){
                     //刷新玩家数据
-                    data.getPlayerDataRemove(player);
+                    a[1] = GuildName;
+                    a[3] = "会长";
                     data.getPlayerData(player);
                 }
             }
+            data.getGuildData();
             connection.createStatement().execute(insertsGuild);
             connection.close();
         }catch (Exception e){
@@ -155,8 +203,8 @@ public class data{
                         player.sendRawMessage("hi");
                     }else{
                         try{
-                            String inserts = "INSERT INTO guildplayer_data (PlayerName,GuildName,GuildCoin,GuildPosition) " +
-                                    "VALUES(\""+ player.getName() +"\",\"无工会\",0,\"无\" )";
+                            String inserts = "INSERT INTO guildplayer_data (PlayerName,GuildName,GuildCoin,GuildPosition,Invitation) " +
+                                    "VALUES(\""+ player.getName() +"\",\"无工会\",0,\"无\",\"无\")";
                             connection.createStatement().execute(inserts);
                             getPlayerData(player);
                         }catch (Exception ea){
@@ -174,7 +222,7 @@ public class data{
     public void CreateSQL(){
         new sql(plugin).run();
         String createTableGuild_data  = "CREATE TABLE IF NOT EXISTS UltimateGuild_data (\n" +
-                "GuildUid INTEGER NOT NULL PRIMARY KEY NOT NULL," +
+                "GuildUid VARCHAR(255) NOT NULL PRIMARY KEY NOT NULL," +
                 "GuildName VARCHAR(255),\n" +
                 "GuildLevel INTEGER NOT NULL,\n" +
                 "GuildExp INTEGER NOT NULL, \n" +
@@ -184,30 +232,32 @@ public class data{
                 "GuildMax INTEGER NOT NULL," +
                 "GuildHas INTEGER NOT NULL," +
                 "GuildDate VARCHAR(255)," +
-                "TransferLimt VARCHAR(255)," +
+                "TransferLimit VARCHAR(255)," +
                 "Master VARCHAR(255)"+
                 ");";
-        String createTableGuildPlayer_data = "CREATE TABLE IF NOT EXISTS GuildPlayer_data (\n" +
-                "PlayerName VARCHAR(255) PRIMARY KEY NOT NULL,\n" +
-                "GuildName VARCHAR(255) NOT NULL,\n" +
-                "GuildCoin INTEGER NOT NULL,\n" +
-                "GuildPosition VARCHAR(255) NOT NULL\n" +
+        String createTableGuildPlayer_data = "CREATE TABLE IF NOT EXISTS GuildPlayer_data (" +
+                "PlayerName VARCHAR(255) PRIMARY KEY NOT NULL," +
+                "GuildName VARCHAR(255) NOT NULL," +
+                "GuildCoin INTEGER NOT NULL," +
+                "GuildPosition VARCHAR(255) NOT NULL," +
+                "Invitation VARCHAR(255) NOT NULL" +
                 ");";
         String createCrystal_data = "CREATE TABLE IF NOT EXISTS Crystal_data (" +
-                "CrystalUid VARCHAR(255) PRIMARY KEY NOT NULL,"+
+                "CrystalUid INTEGER NOT NULL PRIMARY KEY NOT NULL,"+
                 "WorldName VARCHAR(255)," +
                 "GuildName VARCHAR(255) NOT NULL," +
                 "LocationX VARCHAR(255) NOT NULL," +
                 "LocationY VARCHAR(255) NOT NULL," +
                 "LocationZ VARCHAR(255) NOT NULL," +
                 "CrystalSize VARCHAR(255) NOT NULL," +
-                "CrystalMain VARCHAR(255) NOT NULL," +
+                "CrystalMain VARCHAR(255) NOT NULL" +
                 ");";
         try {
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate(createCrystal_data);
+
             stmt.executeUpdate(createTableGuild_data);
             stmt.executeUpdate(createTableGuildPlayer_data);
+            stmt.executeUpdate(createCrystal_data);
             stmt.close();
             connection.close();
         } catch (SQLException e) {
