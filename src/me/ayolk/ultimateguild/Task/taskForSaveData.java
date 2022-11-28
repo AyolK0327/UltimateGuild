@@ -22,8 +22,8 @@ public class taskForSaveData {
                     //data中的Player_Data存到数据库中
                     data.saveData();
                 }
-                plugin.getServer().getPlayer("Prob1tX_x").sendRawMessage("异步测试..."+plugin.getConfig().getLong("AutoSave.Deny"));
+                data.saveGuildData();
             }
-        }.runTaskTimerAsynchronously(plugin , 120,plugin.getConfig().getLong("AutoSave.Deny") * 20);
+        }.runTaskTimerAsynchronously(plugin , 120,plugin.getConfig().getLong("AutoSave.delay") * 20);
     }
 }

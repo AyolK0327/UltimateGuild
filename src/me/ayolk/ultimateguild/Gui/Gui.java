@@ -73,13 +73,16 @@ public class Gui{
                         ItemStack GuildItem = new ItemStack(Material.valueOf(Guild[4]),1);
                         ItemMeta itemMeta = GuildItem.getItemMeta();
                         itemMeta.setDisplayName(Guild[0]);
-
+                        String levels = plugin.getConfig().getString("Guild.Level."+Guild[1]+".exp");
+                        if(levels == null){
+                            levels = "30";
+                        }
                         List<String> getLore1 = config.getStringList("icon."+a[3]+".lore");
                         List<String> repLore = new ArrayList<>();
 
                         for (String lore1 : getLore1){
-                            String SetLore = lore1.replace("%Guild%_has_Player%",Guild[2]).replace("%Guild_Max_Player%",Guild[2]).replace("%Guild_Level%",Guild[1]).replace("%Guild_info%",Guild[5]);
-                            repLore.add(SetLore);
+                            String SetLore = lore1.replace("%Guild_Has_Player%",Guild[7]).replace("%Guild_Max_Player%",Guild[6]).replace("%Guild_Level%",Guild[1]).replace("%Guild_info%",Guild[5]).replace("%Guild_date%",Guild[8]).replace("%Guild_exp%",Guild[2]).replace("%Guild_levels%",levels);
+                            repLore.add(SetLore.replace("&","§"));
                         }
                         itemMeta.setLore(repLore);
                         GuildItem.setItemMeta(itemMeta);

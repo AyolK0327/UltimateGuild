@@ -38,11 +38,9 @@ public class AdminCommand implements CommandExecutor {
             }else{
                 test.append(Arrays.toString(b),getExp+i,getExp+i+1);
             }
-
         }
         return test.toString();
     }
-
     private final Plugin plugin;
 
     public AdminCommand(Plugin plugin) {
@@ -80,7 +78,12 @@ public class AdminCommand implements CommandExecutor {
 
         if(args[0].equalsIgnoreCase("test")){
             //设置prob1t的钱
-            sender.sendMessage(String.valueOf(new Date().getTime()));
+            for(String[]a : Guild_data){
+                sender.sendMessage(a[0] + "人数" +a[7]);
+                int setInt = Integer.parseInt(a[7]) + 1;
+                a[7] = String.valueOf(setInt);
+                sender.sendMessage(a[0]+"改人数" + a[7]);
+            }
         }
         if(args[0].equals("test2")){
             sender.sendMessage(Arrays.toString(Guild_data.get(0)));

@@ -2,6 +2,7 @@ package me.ayolk.ultimateguild;
 
 import me.ayolk.ultimateguild.Gui.Gui;
 import me.ayolk.ultimateguild.Gui.GuiListener;
+import me.ayolk.ultimateguild.Gui.GuildGui;
 import me.ayolk.ultimateguild.Listeners.PlayerJoinEventListener;
 import me.ayolk.ultimateguild.Listeners.PlayerQuitEventListener;
 import me.ayolk.ultimateguild.Listeners.testEvent;
@@ -22,6 +23,7 @@ public class UltimateGuild extends JavaPlugin {
         reloadConfig();
         new sql(this).run();
         try {
+            new GuildGui(this).LoadGuiConfig(this);
             new Gui(this).LoadGuiConfig(this);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -41,7 +43,6 @@ public class UltimateGuild extends JavaPlugin {
         if(getConfig().getBoolean("AutoSave.enable")){
             new taskForSaveData(this).saveTask();
         }
-
         this.getCommand("UltimateGuild").setExecutor(new UserCommand(this));
         this.getCommand("UltimateGuildAdmin").setExecutor(new AdminCommand(this));
         this.getServer().getPluginManager().registerEvents(new GuiListener(this), this);
@@ -51,9 +52,9 @@ public class UltimateGuild extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerQuitEventListener(this), this);
         getLogger().info(getDataFolder().toString());
     }
-
     @Override
     public void onDisable() {
         data.saveData();
+        data.saveGuildData();
     }
 }

@@ -1,10 +1,6 @@
 name: "工会菜单"
 slot: 6
 
-test:
-  - '#########'
-  - ''
-
 #排版
 icon:
   #工会图标
@@ -41,23 +37,19 @@ icon:
       - 51
       - 52
       - 53
-
-
     action:
-      - "ugadmin reload"
-      - "ugadmin test"
-      - "say %player_name%"
-  3:
+      - "[null]"
+  2:
     name: "测试1"
     type: "Guild"
     lore:
-      - "工会人数 %Guild_Has_Player%/%Guild_Max_Player%"
-      - "工会等级 %Guild_Level%"
-      - "工会创建时间 : 2001-12-1"
-      - "工会介绍:"
-      - "%Guild_info%"
-      -
-      - "[点击申请加入工会]"
+      - "&f工会人数 %Guild_Has_Player%/%Guild_Max_Player%"
+      - "&f工会等级 %Guild_Level%"
+      - "&f升级所需经验 : %Guild_exp%/%Guild_levels%"
+      - "&f工会创建时间 : %Guild_date%"
+      - "&f工会介绍:"
+      - "&7%Guild_info%"
+      - "&a[点击申请加入工会]"
     amount: 1
     slot:
       - 20

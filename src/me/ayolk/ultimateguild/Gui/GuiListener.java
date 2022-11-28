@@ -12,8 +12,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-import static me.ayolk.ultimateguild.Gui.Gui.MenuList;
-import static me.ayolk.ultimateguild.Gui.Gui.config;
+import static me.ayolk.ultimateguild.Gui.Gui.*;
+import static me.ayolk.ultimateguild.Gui.GuildGui.getGuildGui;
 import static me.ayolk.ultimateguild.sql.data.Guild_data;
 
 
@@ -58,12 +58,22 @@ public class GuiListener implements Listener {
             for(String[] a:Guild_data){
                 if(a[0].equals(e.getCurrentItem().getItemMeta().getDisplayName())){
                     player.sendRawMessage("获取到工会");
+                    player.closeInventory();
+                    getGuildGui(player,getUid(a[0].replace("&","§")));
                 }
 
             }
-            player.sendRawMessage(e.getCurrentItem().getItemMeta().getDisplayName().replace("§","&"));
+
             player.sendRawMessage(String.valueOf(e.getRawSlot()));
         }
+    }
+    public String getUid(String GuildName1){
+        for(String[] a : Guild_data){
+            if(a[0].equals(GuildName1)){
+                return a[11];
+            }
+        }
+        return null;
     }
     public void Actions(int slot,Player player){
         for (String[] Menu : MenuList){
@@ -72,6 +82,9 @@ public class GuiListener implements Listener {
                 if(i == slot){
                     List<String> ActionCommand = config.getStringList("icon."+Menu[3]+".action");
                     for(String a : ActionCommand){
+                        if(a.equalsIgnoreCase("[null]")){
+                            return;
+                        }
                         if(a.equalsIgnoreCase("[test]")){
                             player.sendRawMessage("获取到[test]");
                         }else{

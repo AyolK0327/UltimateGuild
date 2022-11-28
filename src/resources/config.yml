@@ -10,13 +10,15 @@ MySQL:
 ##自动保存数据 60 秒
 AutoSave:
   enable: true
-  Deny: 60
+  delay: 120
 Guild:
+  ##转让限制  天数
+  TransferLimit: 10
   GuildIsNull: "无工会"
   ##汇率 设置为 10 就是 金币 10 ：1 工会币
   ExchangeRate: 10
   ##创建工会消耗 ？
-  CreateCost: 0
+  CreateCost: 1000
   ## 等级设置
   Level:
       ##等级
@@ -26,17 +28,17 @@ Guild:
         ##当前等级的工会最大人数
       max: 6
     2:
-      exp: 30
+      exp: 40
       max: 12
     3:
-      exp: 30
+      exp: 50
       max: 18
     4:
-      exp: 30
+      exp: 60
       max: 24
     5:
-      exp: 30
+      exp: 70
       max: 30
     6:
-      exp: 30
+      exp: 80
       max: 36

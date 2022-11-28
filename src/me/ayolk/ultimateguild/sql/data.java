@@ -23,6 +23,30 @@ public class data{
     public data(Plugin plugin) {
         data.plugin = plugin;
     }
+    public static void saveGuildData(){
+        for (String[] a : Guild_data){
+            try {
+                String save = "UPDATE ultimateguild_data SET " +
+                        "GuildLevel=" +  "\"" + Integer.parseInt(a[1]) + "\","  +
+                        "GuildExp=" +  "\"" + Integer.parseInt(a[2]) + "\","  +
+                        "GuildCoin=" +  "\"" + Integer.parseInt(a[3]) + "\","  +
+                        "GuildInfo =" +  "\"" + a[5] + "\","  +
+                        "GuildSign =" +  "\"" + a[4] + "\","  +
+                        "GuildMax =" +  "\"" + plugin.getConfig().getString("Guild.Level." + a[1] + ".max") + "\","  +
+                        "GuildHas=" +  "\"" + Integer.parseInt(a[7]) + "\","  +
+                        "GuildDate=" +  "\"" + a[8] + "\","  +
+                        "TransferLimit=" +  "\" " + a[9] + "\","  +
+                        "Master=" +  "\"" + a[10] + "\","  +
+                        "GuildUid=" +  "\"" + a[11] + "\" "  +
+                        "WHERE GuildName =" + "\"" +a[0] +"\"";
+                new sql(plugin).run();
+                connection.prepareStatement(save).executeUpdate();
+                connection.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
     public static void getGuildData(){
         Guild_data.clear();
         new BukkitRunnable(){
@@ -36,7 +60,7 @@ public class data{
                     Statement stmt = connection.prepareStatement(getGuild);
                     ResultSet rs = stmt.executeQuery(getGuild);
                     while (rs.next()){
-                        String GuildName =  rs.getString("GuildName");
+                        String GuildName = rs.getString("GuildName");
                         String GuildLevel = rs.getString("GuildLevel");
                         String GuildExp = rs.getString("GuildExp");
                         String GuildCoin = rs.getString("GuildCoin");
@@ -133,7 +157,7 @@ public class data{
                             "\"APPLE\"," +
                             "\""+plugin.getConfig().getString("Guild.Level.1.max") + "\"," +
                             "1," +
-                            "\"" +refFormatNowDate() + "\"," +
+                            "\"" + refFormatNowDate() + "\"," +
                             "0," +
                             "\""+player.getName()+"\","+
                             getLastUid() +
@@ -316,5 +340,21 @@ public class data{
                 }
             }
         }.runTaskAsynchronously(plugin);
+    }
+    public static void PlayerJoinGuild(String player,String guild){
+        //
+        for(String[] a : Player_data){
+            if(a[0].equals(player)){
+                a[1] = guild;
+                a[3] = "成员";
+            }
+        }
+        for (String[] b :Guild_data){
+            if(b[0].equals(guild)){
+                int setInt = Integer.parseInt(b[7]) + 1;
+                b[7] = String.valueOf(setInt);
+                return;
+            }
+        }
     }
 }
